@@ -3,12 +3,18 @@
 MeDCMotor motor1(M1);  // Motor 1 connected to port M1
 MeDCMotor motor2(M2);  // Motor 2 connected to port M2
 
-unsigned long forward_interval = 
-unsigned long turn_interval = 
-unsigned long uTurn_interval = 
-unsigned long doubleTurn_interval =
-unsigned long nudge_interval = 
-unsigned long sampling_interval = 
+int motor_speed = //forward speed
+int motor_speed_slightly_slower = //a lower speed for nudging
+int motor_speed_slower = ;//a lower speed for turning
+
+unsigned long forward_interval = //a very short interval for forward();
+unsigned long turn_interval = //interval for 90 degree turn;
+unsigned long uTurn_interval = //interval for u turn;
+unsigned long doubleTurn_interval = //interval between each 90 deg turns in a double turn;
+unsigned long nudge_interval = //a very short interval for nudge();
+unsigned long sampling_interval = //interval before inserting the next paper;
+//all these in units of milliseconds
+
 int colouroutput;
 int white_sample;
 int black_sample;
