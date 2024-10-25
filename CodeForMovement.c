@@ -94,6 +94,15 @@ int detectColour()
  blue_value = analogRead(LDR_pin);   
  delay(100);
 // Run algorithm for colour decoding
+ if (red_value > green_value && red_value > blue_value) {
+    return RED;
+  } else if (green_value > red_value && green_value > blue_value) {
+    return GREEN;
+  } else if (blue_value > red_value && blue_value > green_value) {
+    return BLUE;
+  } else {
+    return UNKNOWN;
+  }
 }
 void setup()
 {
