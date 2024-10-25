@@ -9,28 +9,18 @@ int red = 0;
 int green = 0;
 int blue = 0;
 
-
+float colourArray[] = {0,0,0}; //return to mBot movement
 
 char colourStr[3][5] = {"R = ", "G = ", "B = "};
 
-void setup(){
+void setup() {
 //setup the outputs for the colour sensor
 for(int c = 0;c<=2;c++){
 pinMode(ledArray[c],OUTPUT);
 }
 
-//pinMode(LED,OUTPUT); //Check Indicator -- OFF during Calibration
-
-//begin serial communication
-Serial.begin(9600);
-setBalance(); //calibration
-
-//digitalWrite(LED, HIGH); //Check Indicator -- ON after Calibration
-}
-
-void loop(){                        
-for(int c = 0;c<=2;c++) { // for each colour
-  Serial.print(colourStr[c]);
+void loop() {                        
+for(int c = 0;c<=2;c++) { // for each colour LED
 
   digitalWrite(ledArray[c],HIGH); //turn ON selected LED
   delay(RGBWait);
@@ -40,8 +30,6 @@ for(int c = 0;c<=2;c++) { // for each colour
 
   digitalWrite(ledArray[c],LOW); //turn OFF selected LED
   delay(RGBWait);
-
-  Serial.println(int(colourArray[c])); //show the value for the current colour LED, which corresponds to either the R, G or B of the RGB code
  }
 }
 
