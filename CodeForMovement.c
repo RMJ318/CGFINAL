@@ -126,7 +126,6 @@ void setup()
   delay(sampling_interval);
   red_sample = detect_colour();
   delay(sampling_interval);
-  
 }
 void loop()
 {
