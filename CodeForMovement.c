@@ -80,6 +80,7 @@ void shineGreen() {// Code for turning on the green LED only}
 void shineBlue() {// Code for turning on the blue LED only}
 int detectColour()
 {
+ int red_value, green_value, blue_value;
 // Shine Red, read LDR after some delay
 // Shine Green, read LDR after some delay
 // Shine Blue, read LDR after some delay
