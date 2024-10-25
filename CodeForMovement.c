@@ -6,7 +6,7 @@ MeDCMotor motor2(M2);  // Motor 2 connected to port M2
 unsigned long forward_interval = 
 unsigned long turn_interval = 
 unsigned long uTurn_interval = 
-unsigned long doubleTurn_interval =
+unsigned long doubleTurn_interval = 
 unsigned long nudge_interval = 
 unsigned long sampling_interval = 
 int colouroutput;
@@ -69,9 +69,24 @@ void nudgeRight() {// Code for nudging slightly to the right for some short
   delay(nudge_interval);
 }
 void shineIR() {// Code for turning on the IR emitter only}
-void shineRed() {// Code for turning on the red LED only}
-void shineGreen() {// Code for turning on the green LED only}
-void shineBlue() {// Code for turning on the blue LED only}
+void shineRed() {
+// Code for turning on the red LED only
+  digitalWrite(redPin, HIGH);  
+  delay(100);                  
+  digitalWrite(redPin, LOW);  
+}
+void shineGreen() {
+// Code for turning on the green LED only
+  digitalWrite(greenPin, HIGH);  
+  delay(100);                    
+  digitalWrite(greenPin, LOW);
+}
+void shineBlue() {
+// Code for turning on the blue LED only
+  digitalWrite(bluePin, HIGH);   
+  delay(100);                    
+  digitalWrite(bluePin, LOW);
+}
 int detectColour()
 {
 // Shine Red, read LDR after some delay
