@@ -75,9 +75,24 @@ void nudgeRight() {// Code for nudging slightly to the right for some short
   delay(nudge_interval);
 }
 void shineIR() {// Code for turning on the IR emitter only}
-void shineRed() {// Code for turning on the red LED only}
-void shineGreen() {// Code for turning on the green LED only}
-void shineBlue() {// Code for turning on the blue LED only}
+void shineRed() {
+// Code for turning on the red LED only
+  digitalWrite(redPin, HIGH);  
+  delay(100);                  
+  digitalWrite(redPin, LOW);
+}
+void shineGreen() {
+// Code for turning on the green LED only
+  digitalWrite(redPin, HIGH);  
+  delay(100);                  
+  digitalWrite(redPin, LOW);
+}
+void shineBlue() {
+// Code for turning on the blue LED only
+  digitalWrite(bluePin,HIGH);
+  delay(100);
+  digitaoWrite(bluepin,LOW);
+}
 int detectColour()
 {
   int red_value, green_value, blue_value;
