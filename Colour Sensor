@@ -1,29 +1,16 @@
-
-// Define time delay before the next RGB colour turns ON to allow LDR to stabilize
-#define RGBWait 200 //in milliseconds
-
-// Define time delay before taking another LDR reading
-#define LDRWait 10 //in milliseconds
-
-//LDR sensor pin at y3 (HH)
+#define RGBWait 200 
+#define LDRWait 10
 #define LDR {{1},{1}}
-
-//Check Indicator to signal Calibration Completed (need to find the indicator light lol, meanwhile will ignore LED13)
 //#define LED 13
 
-// Define colour sensor LED pins
 int ledArray[3][2] = {{0,0},{0,1}{1,0}}; // pin y0, y1, y2
 
-//placeholders for colour detected
 int red = 0;
 int green = 0;
 int blue = 0;
 
-//floats to hold colour arrays
-float colourArray[] = {0,0,0};
-float whiteArray[] = {0,0,0};
-float blackArray[] = {0,0,0};
-float greyDiff[] = {0,0,0};
+
+
 char colourStr[3][5] = {"R = ", "G = ", "B = "};
 
 void setup(){
@@ -56,54 +43,6 @@ for(int c = 0;c<=2;c++) { // for each colour
 
   Serial.println(int(colourArray[c])); //show the value for the current colour LED, which corresponds to either the R, G or B of the RGB code
  }
-}
-
-void setBalance(){
-
-//set white balance
-Serial.println("Put White Sample For Calibration ...");
-delay(5000); //delay for five seconds for getting sample ready
-
-digitalWrite(LED,LOW); //Check Indicator OFF during Calibration
-
-//scan the white sample.
-//go through one colour at a time, set the maximum reading for each R, G & B to the whiteArray
-
-for(int i = 0;i<=2;i++){
-
-digitalWrite(ledArray[i],HIGH); //LED ON
-delay(RGBWait);
-
-whiteArray[i] = getAvgReading(5); //input values into array
-
-digitalWrite(ledArray[i],LOW); //LED OFF
-delay(RGBWait);
-}
-
-//set black balance
-Serial.println("Put Black Sample For Calibration ...");
-delay(5000); //delay for five seconds for getting sample ready
-
-//scan the white sample.
-//go through one colour at a time, set the minimum reading for each R, G & B into blackArray
-
-for(int i = 0;i<=2;i++){
-
-digitalWrite(ledArray[i],HIGH); //LED ON
-delay(RGBWait);
-
-blackArray[i] = getAvgReading(5); //input values into array
-
-digitalWrite(ledArray[i],LOW); /LED OFF
-delay(RGBWait);
-
-//the differnce between the maximum and the minimum gives the range
-greyDiff[i] = whiteArray[i] - blackArray[i];
-}
-
-//delay another 5 seconds for getting ready colour objects
-Serial.println("Colour Sensor Is Ready.");
-delay(5000);
 }
 
 int getAvgReading(int times) {
