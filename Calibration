@@ -20,10 +20,15 @@ int green = 0;
 int blue = 0;
 
 //floats to hold colour arrays
-float colourArray[] = {0,0,0};
 float whiteArray[] = {0,0,0};
 float blackArray[] = {0,0,0};
+float redArray[] = {0,0,0};
+float orangeArray[] = {0,0,0};
+float greenArray[] = {0,0,0};
+float blueArray[] = {0,0,0};
+float pinkArray[] = {0,0,0};
 float greyDiff[] = {0,0,0};
+
 char colourStr[3][5] = {"R = ", "G = ", "B = "};
 
 void setup(){
