@@ -73,7 +73,12 @@ void nudgeRight() {// Code for nudging slightly to the right for some short
   motor2.run(motor_speed_slightly_slower);
   delay(nudge_interval);
 }
-void shineIR() {// Code for turning on the IR emitter only}
+void shineIR() {
+// Code for turning on the IR emitter only
+ digitalWrite(irPin, HIGH); 
+ delay(100);                
+ digitalWrite(irPin, LOW);
+}
 void shineRed() {
 // Code for turning on the red LED only
   digitalWrite(redPin, HIGH);  
@@ -90,7 +95,7 @@ void shineBlue() {
 // Code for turning on the blue LED only
   digitalWrite(bluePin,HIGH);
   delay(100);
-  digitaoWrite(bluepin,LOW);
+  digitalWrite(bluepin,LOW);
 }
 int detectColour()
 {
