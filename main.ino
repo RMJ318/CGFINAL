@@ -18,6 +18,10 @@ void setup()
   pinMode(LED_PIN2, OUTPUT);
   pinMode(LDR_IN, INPUT);
   pinMode(IR_IN, INPUT);
-  Serial.begin(9600)
+  Serial.begin(9600);
+}
 
+void loop()
+{
+  
 }
