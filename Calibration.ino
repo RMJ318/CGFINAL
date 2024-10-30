@@ -3,7 +3,7 @@
 #define LDR {{1},{1}} //y3
 //#define LED 13 idk where the check light indicator is
 
-int ledArray[3][2] = {{0,0},{0,1}{1,0}}; // pin y0, y1, y2
+int ledArray[3][2] = {{0,0},{0,1},{1,0}}; // pin y0, y1, y2
 
 int red = 0;
 int green = 0;
@@ -124,5 +124,5 @@ for(int i = 0;i < times;i++) {
   reading = analogRead(LDR);
   total = reading + total;
   delay(LDRWait);
-  }
+  }return total/times;
 }
