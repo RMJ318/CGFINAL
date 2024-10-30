@@ -131,11 +131,45 @@ void setup()
 void loop()
 {
 // Read ultrasonic sensing distance (choose an appropriate timeout)
+ int distance = readUltrasonic();
 // Read IR sensing distance (turn off IR, read IR detector, turn on IR, read IR
-detector, estimate distance)
+//detector, estimate distance)
+ int irDistance = readIRDistance();
 // if within black line, stop motor, detect colour, and take corresponding action
+ if (distance < 10) { 
+    stopMotor();
+    int detected_colour = detectColour();
+  switch (detected_colour) {
+      case 1: 
+        turnRight();  
+        break;
+      case 2:  
+        doubleRightTurn();  
+        break;
+      case 3:  
+        moveForward();  
+        break;
+      case 4:  
+        turnLeft(); 
+        break;
+      case 5:  
+        uTurn();  
+        break;
+      default:
+        stopMotor();
+  }
+ }
 // else if too near to left wall, nudge right
+ else if (irDistance < 10) {  
+    nudgeRight();
+ }
 // else if too near to right wall, nudge left
+  else if (irDistance > 50) {  
+    nudgeLeft();
+  }
 // else move forward
+   else {
+    moveForward(); 
+   }
 }
 
