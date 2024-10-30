@@ -52,12 +52,33 @@ float ir_dist() // ir distance reading is likely to be unreliable
   return ir_in;
 }
 
+void move_forward();
+{
+  //step 1: get distance w/ ultrasound
+  if (ultrasound_dist > 0)
+  {
+    float offset_left = baseline_left - ultrasound_dist();
+  }
+    // ir sensor as fallback
+  else
+  {
+    float offset_right = baseline_right - ir_dist();
+  }
+  // 
+  
+}
+
+float left_dist;
+float right_dist;
+
 void setup()
 {
   pinMode(DECODE_PIN0, OUTPUT);
   pinMode(DECODE_PIN1, OUTPUT);
   pinMode(LDR_IN, INPUT);
   pinMode(IR_IN, INPUT);
+  baseline_left = ultrasound_dist();
+  baseline_right = ir_dist();
   Serial.begin(9600);
 }
 
@@ -74,7 +95,6 @@ void loop()
   else
   {
     move_forward();
-    nudge();
   }
   //delay(10); bot might take too long figuring out everything above to wait
 }
