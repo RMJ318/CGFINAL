@@ -10,10 +10,46 @@
 #define DECODE_PIN1 = A1;
 #define LDR_IN = A2;
 #define IR_IN = A3;
+#define ULTRASOUND 12;
+#define TIMEOUT 2000;
+#define SPEED_OF_SOUND 343;
+#define BASELINE XXXX;
 
 MeDCMotor motor1(M1);
 MeDCMotor motor2(M2);
 MeLineFollower lineFinder(PORT_2);
+
+// gets distance from ultrasonic sensor
+float ultrasound_dist()
+{
+  pinMode(ULTRASONIC, OUTPUT);
+  digitalWrite(ULTRASONIC, LOW); 
+  delayMicroseconds(2); 
+  digitalWrite(ULTRASONIC, HIGH); 
+  delayMicroseconds(10); 
+  digitalWrite(ULTRASONIC, LOW);
+  
+  pinMode(ULTRASONIC, INPUT);
+  long duration = pulseIn(ULTRASONIC, HIGH, TIMEOUT); 
+  if (duration > 0) 
+  {
+    return (duration / 2.0 / 1000000 * SPEED_OF_SOUND * 100); 
+  }
+  else
+  {
+    return -1;
+  }
+}
+
+float ir_dist() // ir distance reading is likely to be unreliable
+{
+  float ambient = analogRead(IR_IN); // ambient light level, subtract from recorded 
+  delayMicroseconds(10);
+  digitalWrite(DECODE_PIN0, HIGH);
+  digitalWrite(DECODE_PIN1, HIGH);
+  float ir_in = analogRead(IR_IN) - ambient;
+  return 
+}
 
 void setup()
 {
