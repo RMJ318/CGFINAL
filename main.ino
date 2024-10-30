@@ -32,7 +32,7 @@ void loop()
   {
     motor1.stop;
     motor2.stop;
-    // see colour
+    see_colour();
   }
   else
   {
