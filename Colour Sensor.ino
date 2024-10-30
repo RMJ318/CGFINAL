@@ -24,9 +24,11 @@ char colourStr[3][5] = {"R = ", "G = ", "B = "};
 void setup() { //set each RGB pin to output mode
 for(int c = 0;c<=2;c++) {
 pinMode(ledArray[c], OUTPUT);
+detect();
+assignCode();
 }
 
-void loop() {                        
+void detect() {                        
 for(int c = 0;c<=2;c++) { // for each colour LED
   digitalWrite(ledArray[c],HIGH); //turn ON selected LED
   delay(RGBWait);
