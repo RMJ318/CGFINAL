@@ -15,13 +15,12 @@ unsigned long nudge_interval = //a very short interval for nudge();
 unsigned long sampling_interval = //interval before inserting the next paper;
 //all these in units of milliseconds
 
-int colouroutput;
-int white_sample;
-int black_sample;
-int red_sample;
-int blue_sample;
-int green_sample;
-int orange_sample;
+int colourCode = 0;
+//RED == 1
+//ORANGE == 2
+//GREEN == 3
+//BLUE == 4 
+// PINK == 5
  
 
 void celebrate() {// Code for playing celebratory tune
@@ -110,13 +109,15 @@ int detectColour()
  delay(100);
 // Run algorithm for colour decoding
  if (red_value > green_value && red_value > blue_value) {
-    return RED;
+    return 1;
   } else if (green_value > red_value && green_value > blue_value) {
-    return GREEN;
+    return 3;
   } else if (blue_value > red_value && blue_value > green_value) {
-    return BLUE;
+    return 4;
+  } else if (red_value > blue_value && green_value > blue_value) {
+    return 2; 
   } else {
-    return UNKNOWN;
+    return 5;
   }
 }
 void setup()
