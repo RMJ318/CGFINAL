@@ -1,6 +1,8 @@
+//THIS FUNCTION WILL DETECT, AND STORE IN THE ARRAY colourArray, THE COLOUR THAT IS UNDER THE MBOT, AFTER IT IS TRIGGERED TO STOP BY THE LINE CHECKER
+
 #define RGBWait 200 
 #define LDRWait 10
-#define LDR {{1},{1}}
+#define LDR {{1},{1}} //pin y3
 //#define LED 13
 
 int ledArray[3][2] = {{0,0},{0,1}{1,0}}; // pin y0, y1, y2
@@ -13,10 +15,10 @@ float colourArray[] = {0,0,0}; //return to mBot movement
 
 char colourStr[3][5] = {"R = ", "G = ", "B = "};
 
-void setup() {
-//setup the outputs for the colour sensor
-for(int c = 0;c<=2;c++){
-pinMode(ledArray[c],OUTPUT);
+
+void setup() { //set each RGB pin to output mode
+for(int c = 0;c<=2;c++) {
+pinMode(ledArray[c], OUTPUT);
 }
 
 void loop() {                        
