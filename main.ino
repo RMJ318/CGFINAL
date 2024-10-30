@@ -48,7 +48,8 @@ float ir_dist() // ir distance reading is likely to be unreliable
   digitalWrite(DECODE_PIN0, HIGH);
   digitalWrite(DECODE_PIN1, HIGH);
   float ir_in = analogRead(IR_IN) - ambient;
-  return 
+  // magic to linearise and convert ir reading to cm
+  return ir_in;
 }
 
 void setup()
