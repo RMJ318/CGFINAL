@@ -89,7 +89,7 @@ for(int i = 0;i<=2;i++){
 digitalWrite(ledArray[i],HIGH); //LED ON
 delay(RGBWait);
 colourArray[i] = getAvgReading(5); //input values into array
-orrangeArray[i] = (colourArray[i] - blackArray[c])/(greyDiff[i])*255;
+orangeArray[i] = (colourArray[i] - blackArray[c])/(greyDiff[i])*255;
 digitalWrite(ledArray[i],LOW); /LED OFF
 delay(RGBWait);
 }
