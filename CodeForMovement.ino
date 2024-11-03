@@ -2,18 +2,23 @@
 
 MeDCMotor motor1(M1);  // Motor 1 connected to port M1
 MeDCMotor motor2(M2);  // Motor 2 connected to port M2
+MeLineFollower lineFinder(PORT_2); // Linefinder connected to port 2
 
-int motor_speed = //forward speed
-int motor_speed_slightly_slower = //a lower speed for nudging
-int motor_speed_slower = ;//a lower speed for turning
-
-unsigned long forward_interval = //a very short interval for forward();
-unsigned long turn_interval = //interval for 90 degree turn;
-unsigned long uTurn_interval = //interval for u turn;
-unsigned long doubleTurn_interval = //interval between each 90 deg turns in a double turn;
-unsigned long nudge_interval = //a very short interval for nudge();
-unsigned long sampling_interval = //interval before inserting the next paper;
+#define motor_speed 128; 
+#define FWD_INT //a very short interval for forward();
+#define TURN_INT //interval for 90 degree turn;
+#define UTURN_INT //interval for u turn;
+#define DTURN_INT //interval between each 90 deg turns in a double turn;
+// #define nudge_interval //a very short interval for nudge();
+#define sampling_interval //interval before inserting the next paper;
 //all these in units of milliseconds
+
+#define K_1 0.5;
+#define K_2 0.5; //these values will have to be fine tuned
+
+// store previous, baseline just to initialise to random val
+float prev_offset_l = baseline_l;
+float prev_offset_r = baseline_r;
 
 int colourCode = 0;
 //RED == 1
@@ -21,7 +26,39 @@ int colourCode = 0;
 //GREEN == 3
 //BLUE == 4 
 // PINK == 5
- 
+
+// gets distance from ultrasonic sensor
+float ultrasound_dist()
+{
+  pinMode(ULTRASONIC, OUTPUT);
+  digitalWrite(ULTRASONIC, LOW); 
+  delayMicroseconds(2); 
+  digitalWrite(ULTRASONIC, HIGH); 
+  delayMicroseconds(10); 
+  digitalWrite(ULTRASONIC, LOW);
+  
+  pinMode(ULTRASONIC, INPUT);
+  long duration = pulseIn(ULTRASONIC, HIGH, TIMEOUT); 
+  if (duration > 0) 
+  {
+    return (duration / 2.0 / 1000000 * SPEED_OF_SOUND * 100); 
+  }
+  else
+  {
+    return -1;
+  }
+}
+
+float ir_dist() // ir distance reading is likely to be unreliable
+{
+  float ambient = analogRead(IR_IN); // ambient light level, subtract from recorded 
+  delayMicroseconds(10);
+  digitalWrite(DECODE_PIN0, HIGH);
+  digitalWrite(DECODE_PIN1, HIGH);
+  float ir_in = analogRead(IR_IN) - ambient;
+  // magic to linearise and convert ir reading to cm
+  return ir_in;
+}
 
 void celebrate() {// Code for playing celebratory tune
   
@@ -30,12 +67,27 @@ void stopMotor() {// Code for stopping motor
   motor1.stop();
   motor2.stop();
 }
-void moveForward() {// Code for moving forward for some short interval
+
+void moveForward() { // Code for moving forward for some short interval
+{
+  //get distance w/ ultrasound
+ ultrasound_dist = ultrasound_dist();
+  if (ultrasound_dist > 0)
   {
-    motor1.run(motor_speed);
-    motor2.run(motor_speed);
-    delay(forward_interval);
+    float offset_left = baseline_left - ultrasound_dist();
+  }
+  else // use ir to get distance
+   {
+    float offset_right = baseline_right - ir_dist();
+  }
+ // correction = (k1 * (distance from center)) - k2 * (d/dx distance from center)
+ int correction = round(K_1 * offset_left - K_2 * (offset_left - prev_offset_left));
+ int speed_left = 128 + correction;
+ int speed_right = 128 - correction;
+ motor1.run(speed_left);
+ motor2.run(speed_right);
 }
+
 void turnRight() {// Code for turning right 90 deg
   motor1.run(motor_speed);
   motor2.run(motor_speed_slower);
@@ -73,12 +125,7 @@ void nudgeRight() {// Code for nudging slightly to the right for some short
   motor2.run(motor_speed_slightly_slower);
   delay(nudge_interval);
 }
-void shineIR() {
-// Code for turning on the IR emitter only
- digitalWrite(irPin, HIGH); 
- delay(100);                
- digitalWrite(irPin, LOW);
-}
+
 void shineRed() {
 // Code for turning on the red LED only
   digitalWrite(redPin, HIGH);  
@@ -97,6 +144,7 @@ void shineBlue() {
   delay(100);
   digitalWrite(bluepin,LOW);
 }
+
 int detectColour()
 {
   int red_value, green_value, blue_value;
@@ -133,48 +181,5 @@ void setup()
   red_sample = detect_colour();
   delay(sampling_interval);
 }
-void loop()
-{
-// Read ultrasonic sensing distance (choose an appropriate timeout)
- int distance = readUltrasonic();
-// Read IR sensing distance (turn off IR, read IR detector, turn on IR, read IR
-//detector, estimate distance)
- int irDistance = readIRDistance();
-// if within black line, stop motor, detect colour, and take corresponding action
- if (distance < 10) { 
-    stopMotor();
-    int detected_colour = detectColour();
-  switch (detected_colour) {
-      case 1: 
-        turnRight();  
-        break;
-      case 2:  
-        doubleRightTurn();  
-        break;
-      case 3:  
-        moveForward();  
-        break;
-      case 4:  
-        turnLeft(); 
-        break;
-      case 5:  
-        uTurn();  
-        break;
-      default:
-        stopMotor();
-  }
- }
-// else if too near to left wall, nudge right
- else if (irDistance < 10) {  
-    nudgeRight();
- }
-// else if too near to right wall, nudge left
-  else if (irDistance > 50) {  
-    nudgeLeft();
-  }
-// else move forward
-   else {
-    moveForward(); 
-   }
-}
 
+// movement code shifted to main.ino
