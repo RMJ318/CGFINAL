@@ -14,6 +14,7 @@
 #define TIMEOUT 2000;
 #define SPEED_OF_SOUND 343;
 #define BASELINE XXXX;
+#define C_FACTOR 0.5; // Correction factor for forward movement
 
 MeDCMotor motor1(M1);
 MeDCMotor motor2(M2);
@@ -52,12 +53,13 @@ float ir_dist() // ir distance reading is likely to be unreliable
   return ir_in;
 }
 
-void move_forward();
+void move_forward()
 {
+  // proportional movement method
   //step 1: get distance w/ ultrasound
   if (ultrasound_dist > 0)
   {
-    float offset_left = baseline_left - ultrasound_dist();
+    float offset_left = baseline_left / ultrasound_dist(); // >1 if too close to wall, <1 if too far from wall
   }
     // ir sensor as fallback
   else
@@ -65,11 +67,11 @@ void move_forward();
     float offset_right = baseline_right - ir_dist();
   }
   // 
-  
+  motor1.run(100 * offset_left) // run left wheel runs faster if close to left wall, and slower if far from left wall
 }
 
-float left_dist;
-float right_dist;
+float baseline_left;
+float baseline_right;
 
 void setup()
 {
