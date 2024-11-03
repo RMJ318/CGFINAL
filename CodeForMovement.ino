@@ -9,16 +9,17 @@ MeLineFollower lineFinder(PORT_2); // Linefinder connected to port 2
 #define TURN_INT //interval for 90 degree turn;
 #define UTURN_INT //interval for u turn;
 #define DTURN_INT //interval between each 90 deg turns in a double turn;
-// #define nudge_interval //a very short interval for nudge();
 #define sampling_interval //interval before inserting the next paper;
 //all these in units of milliseconds
 
+// following are for move_forward
 #define K_1 0.5;
 #define K_2 0.5; //these values will have to be fine tuned
 
 // store previous, baseline just to initialise to random val
 float prev_offset_l = baseline_l;
 float prev_offset_r = baseline_r;
+// end of move_forward values
 
 int colourCode = 0;
 //RED == 1
@@ -68,7 +69,7 @@ void stopMotor() {// Code for stopping motor
   motor2.stop();
 }
 
-void moveForward() { // Code for moving forward for some short interval
+void move_forward() { // Code for moving forward for some short interval
 {
   //get distance w/ ultrasound
  ultrasound_dist = ultrasound_dist();
@@ -80,7 +81,7 @@ void moveForward() { // Code for moving forward for some short interval
    {
     float offset_right = baseline_right - ir_dist();
   }
- // correction = (k1 * (distance from center)) - k2 * (d/dx distance from center)
+ // correction = (k1 * (distance from center)) - k2 * (d/dx distance from center))
  int correction = round(K_1 * offset_left - K_2 * (offset_left - prev_offset_left));
  int speed_left = 128 + correction;
  int speed_right = 128 - correction;
@@ -115,64 +116,14 @@ void doubleRightTurn() {// Code for double right turn
   delay(doubleTurn_interval);
   turnRight();
 }
-void nudgeLeft() {
-  motor1.run(motor_speed_slightly_slower);
-  motor2.run(motor_speed);
-  delay(nudge_interval);
-}
-void nudgeRight() {// Code for nudging slightly to the right for some short
-  motor1.run(motor_speed);
-  motor2.run(motor_speed_slightly_slower);
-  delay(nudge_interval);
-}
 
-void shineRed() {
-// Code for turning on the red LED only
-  digitalWrite(redPin, HIGH);  
-  delay(100);                  
-  digitalWrite(redPin, LOW);
-}
-void shineGreen() {
-// Code for turning on the green LED only
-  digitalWrite(redPin, HIGH);  
-  delay(100);                  
-  digitalWrite(redPin, LOW);
-}
-void shineBlue() {
-// Code for turning on the blue LED only
-  digitalWrite(bluePin,HIGH);
-  delay(100);
-  digitalWrite(bluepin,LOW);
-}
+// nudge replaced with proportional movement in forward
 
-int detectColour()
-{
-  int red_value, green_value, blue_value;
-// Shine Red, read LDR after some delay
-  shineRed();
- red_value = analogRead(LDR_pin);   
- delay(100);
-// Shine Green, read LDR after some delay
-  shineGreen();
- green_value = analogRead(LDR_pin);  
- delay(100);
-// Shine Blue, read LDR after some delay
-  shineBlue();
- blue_value = analogRead(LDR_pin);   
- delay(100);
-// Run algorithm for colour decoding
- if (red_value > green_value && red_value > blue_value) {
-    return 1;
-  } else if (green_value > red_value && green_value > blue_value) {
-    return 3;
-  } else if (blue_value > red_value && blue_value > green_value) {
-    return 4;
-  } else if (red_value > blue_value && green_value > blue_value) {
-    return 2; 
-  } else {
-    return 5;
-  }
-}
+// combined shineRed/Green/Blue into single function, also in colour sensor
+
+// moved detectColour to colour_sensor.ino
+
+
 void setup()
 {
   //pinmode codes
