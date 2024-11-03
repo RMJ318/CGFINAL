@@ -23,18 +23,52 @@ int colourCode = 0;
 
 char colourStr[3][5] = {"R = ", "G = ", "B = "};
 
-void setup() { //set each RGB pin to output mode
-for(int c = 0;c<=2;c++) {
-detect();
-assignCode();
-}
-
 void shine_led(int i)
 {
   // shines red/green/blue/IR if i is 0/1/2/3
   // 0 -> 0 0, 1 -> 0 1, etc
   digitalWrite(DECODE_PIN0, i / 2); 
   digitalWrite(DECODE_PIN1, i % 2);
+}
+
+
+int detectColour()
+{
+  int red_value, green_value, blue_value;
+
+  // Shine Red, read LDR after some delay
+  shine_led(RED_LED);
+  delay(100);
+  red_value = analogRead(LDR_pin);   
+
+  // Shine Green, read LDR after some delay
+  shine_led(GREEN_LED);
+  delay(100);
+  green_value = analogRead(LDR_pin);
+  
+  // Shine Blue, read LDR after some delay
+ shine_led(BLUE_LED);
+ delay(100);
+ blue_value = analogRead(LDR_pin);   
+
+  
+ // Run algorithm for colour decoding
+ if (red_value > green_value && red_value > blue_value) {
+    return 1;
+  } else if (green_value > red_value && green_value > blue_value) {
+    return 3;
+  } else if (blue_value > red_value && blue_value > green_value) {
+    return 4;
+  } else if (red_value > blue_value && green_value > blue_value) {
+    return 2; 
+  } else {
+    return 5;
+  }
+}
+
+int detectColour_2() {
+detect();
+return assignCode();
 }
 
 void detect() {                        
