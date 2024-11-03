@@ -21,7 +21,7 @@ float greyDiff[] = {0,0,0};
 
 char colourStr[3][5] = {"R = ", "G = ", "B = "};
 
-void setup(){
+void calibration_setup(){
 for(int c = 0;c<=2;c++){
 pinMode(ledArray[c],OUTPUT);
 }
