@@ -1,11 +1,13 @@
 //THIS FUNCTION WILL DETECT, AND STORE IN THE ARRAY colourArray, THE COLOUR THAT IS UNDER THE MBOT, AFTER IT IS TRIGGERED TO STOP BY THE LINE CHECKER
 
+// decoder pins and LDR pin declared in main.ino
+
+#define RED_LED 0;
+#define GREEN_LED 1;
+#define BLUE_LED 2;
+#define IR 3
 #define RGBWait 200 
 #define LDRWait 10
-#define LDR {{1},{1}} //pin y3
-//#define LED 13
-
-int ledArray[3][2] = {{0,0},{0,1}{1,0}}; // pin y0, y1, y2
 
 int red = 0;
 int green = 0;
@@ -23,18 +25,25 @@ char colourStr[3][5] = {"R = ", "G = ", "B = "};
 
 void setup() { //set each RGB pin to output mode
 for(int c = 0;c<=2;c++) {
-pinMode(ledArray[c], OUTPUT);
 detect();
 assignCode();
 }
 
+void shine_led(int i)
+{
+  // shines red/green/blue/IR if i is 0/1/2/3
+  // 0 -> 0 0, 1 -> 0 1, etc
+  digitalWrite(DECODE_PIN0, i / 2); 
+  digitalWrite(DECODE_PIN1, i % 2);
+}
+
 void detect() {                        
-for(int c = 0;c<=2;c++) { // for each colour LED
-  digitalWrite(ledArray[c],HIGH); //turn ON selected LED
+for(int c = 0; c < 3; c++) { // for each colour LED
+  shine_led(c); //turn ON selected LED
   delay(RGBWait);
   colourArray[c] = getAvgReading(5); //get ave reading of the colour the LDR is exposed to
   colourArray[c] = (colourArray[c] - blackArray[c])/(greyDiff[c])*255;
-  digitalWrite(ledArray[c],LOW); //turn OFF selected LED
+  shine_led(IR); //turn OFF selected LED
   delay(RGBWait);
  }
 }
@@ -64,11 +73,12 @@ return 5; // PINK
 }
 
 int getAvgReading(int times) {
-int reading;
-int total =0;
-for(int i = 0;i < times;i++) {
-  reading = analogRead(LDR);
-  total = reading + total;
-  delay(LDRWait);
+  int reading;
+  int total = 0;
+  for(int i = 0; i < times; i++) {
+    reading = analogRead(LDR);
+    total = reading + total;
+    delay(LDRWait);
   }
+  return total / times;
 }
