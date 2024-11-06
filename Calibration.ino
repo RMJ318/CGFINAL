@@ -25,19 +25,16 @@ void calibration_setup(){
 for(int c = 0;c<=2;c++){
 pinMode(ledArray[c],OUTPUT);
 }
-//pinMode(LED,OUTPUT); //Check Indicator -- OFF during Calibration
 //begin serial communication
 Serial.begin(9600);
 setBalance(); //calibration
 storeColour();
-//digitalWrite(LED, HIGH); //Check Indicator -- ON after Calibration
 }
 
 void setBalance(){
 //set white balance
 Serial.println("Put White Sample For Calibration ...");
 delay(5000); 
-digitalWrite(LED,LOW); //Check Indicator OFF during Calibration
 for(int i = 0;i<=2;i++){
 digitalWrite(ledArray[i],HIGH); //LED ON
 delay(RGBWait);
@@ -125,4 +122,12 @@ for(int i = 0;i < times;i++) {
   total = reading + total;
   delay(LDRWait);
   }return total/times;
+}
+
+void shine_led(int i)
+{
+  // shines red/green/blue/IR if i is 0/1/2/3
+  // 0 -> 0 0, 1 -> 0 1, etc
+  digitalWrite(DECODE_PIN0, i / 2); 
+  digitalWrite(DECODE_PIN1, i % 2);
 }
