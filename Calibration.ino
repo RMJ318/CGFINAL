@@ -37,10 +37,10 @@ void setBalance() {
   delay(5000); 
 	
   for(int i = 0;i<=2;i++) {
-    digitalWrite(ledArray[i],HIGH); //LED ON
+    shine_led(i); //turn ON selected LED
     delay(RGBWait);
     whiteArray[i] = getAvgReading(5);
-    digitalWrite(ledArray[i],LOW); //LED OFF
+    shine_led(IR); //turn OFF selected LED
     delay(RGBWait);
  }
 
@@ -48,68 +48,68 @@ void setBalance() {
   delay(5000);
 	
   for(int i = 0;i<=2;i++) {
-  digitalWrite(ledArray[i],HIGH); //LED ON
-  delay(RGBWait);
-  blackArray[i] = getAvgReading(5); 
-  digitalWrite(ledArray[i],LOW); /LED OFF
-  delay(RGBWait);
-  greyDiff[i] = whiteArray[i] - blackArray[i];
- }
+    shine_led(i); //turn ON selected LED
+    delay(RGBWait);
+    blackArray[i] = getAvgReading(5); 
+    shine_led(IR); //turn OFF selected LED
+    delay(RGBWait);
+    greyDiff[i] = whiteArray[i] - blackArray[i];
+   }
 }
 
 void setColour(){
   Serial.println("Put PINK Sample For Calibration ...");
   delay(5000); 
-  for(int i = 0;i<=2;i++){
-  digitalWrite(ledArray[i],HIGH); //LED ON
-  delay(RGBWait);
-  colourArray[i] = getAvgReading(5); //input values into array
-  pinkArray[i] = (colourArray[i] - blackArray[c])/(greyDiff[i])*255;
-  digitalWrite(ledArray[i],LOW); /LED OFF
-  delay(RGBWait);
+  for(int i = 0;i<=2;i++) {
+    shine_led(i); //turn ON selected LED
+    delay(RGBWait);
+    colourArray[i] = getAvgReading(5); //input values into array
+    pinkArray[i] = (colourArray[i] - blackArray[c])/(greyDiff[i])*255;
+    shine_led(IR); //turn OFF selected LED
+    delay(RGBWait);
   }
 
   Serial.println("Put RED Sample For Calibration ...");
   delay(5000); 
   for(int i = 0;i<=2;i++) {
-    digitalWrite(ledArray[i],HIGH); //LED ON
+    shine_led(i); //turn ON selected LED
     delay(RGBWait);
     colourArray[i] = getAvgReading(5); 
     redArray[i] = (colourArray[i] - blackArray[c])/(greyDiff[i])*255;
-    digitalWrite(ledArray[i],LOW); /LED OFF
+     shine_led(IR); //turn OFF selected LED
     delay(RGBWait);
   }
 
   Serial.println("Put ORANGE Sample For Calibration ...");
   delay(5000); 
     for(int i = 0;i<=2;i++) {
-    digitalWrite(ledArray[i],HIGH); //LED ON
-    delay(RGBWait);
-    colourArray[i] = getAvgReading(5); 
-    orangeArray[i] = (colourArray[i] - blackArray[c])/(greyDiff[i])*255;
-    digitalWrite(ledArray[i],LOW); /LED OFF
-    delay(RGBWait);
+      shine_led(i); //turn ON selected LED
+      delay(RGBWait);
+      colourArray[i] = getAvgReading(5); 
+      orangeArray[i] = (colourArray[i] - blackArray[c])/(greyDiff[i])*255;
+      shine_led(IR); //turn OFF selected LED
+      delay(RGBWait);
   }
 
   Serial.println("Put GREEN Sample For Calibration ...");
   delay(5000); 
-  for(int i = 0;i<=2;i++){
-  digitalWrite(ledArray[i],HIGH); //LED ON
-  delay(RGBWait);
-  colourArray[i] = getAvgReading(5); 
-  greenArray[i] = (colourArray[i] - blackArray[c])/(greyDiff[i])*255;
-  digitalWrite(ledArray[i],LOW); /LED OFF
-  delay(RGBWait);
+  for(int i = 0;i<=2;i++) {
+    shine_led(i); //turn ON selected LED
+    delay(RGBWait);
+    colourArray[i] = getAvgReading(5); 
+    greenArray[i] = (colourArray[i] - blackArray[c])/(greyDiff[i])*255;
+    shine_led(IR); //turn OFF selected LED
+    delay(RGBWait);
 }
 
   Serial.println("Put BLUE Sample For Calibration ...");
   delay(5000); 
   for(int i = 0;i<=2;i++) {
-    digitalWrite(ledArray[i],HIGH); //LED ON
+    shine_led(i); //turn ON selected LED
     delay(RGBWait);
     blueArray[i] = getAvgReading(5); 
     redArray[i] = (colourArray[i] - blackArray[c])/(greyDiff[i])*255;
-    digitalWrite(ledArray[i],LOW); /LED OFF
+    shine_led(IR); //turn OFF selected LED
     delay(RGBWait);
   }
 }
