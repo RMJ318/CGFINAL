@@ -1,15 +1,8 @@
 #define RGBWait 200
 #define LDRWait 10 
-#define LDR {{1},{1}} //y3
 //#define LED 13 idk where the check light indicator is
 
-int ledArray[3][2] = {{0,0},{0,1},{1,0}}; // pin y0, y1, y2
-
-int red = 0;
-int green = 0;
-int blue = 0;
-
-float colourArray[] = {0,0,0];
+float colourArray[] = {0,0,0};
 float whiteArray[] = {0,0,0};
 float blackArray[] = {0,0,0};
 float redArray[] = {0,0,0};
@@ -21,22 +14,20 @@ float greyDiff[] = {0,0,0};
 
 char colourStr[3][5] = {"R = ", "G = ", "B = "};
 
+
+
 void calibration_setup()
 {
-  for(int c = 0;c<=2;c++) {
-    pinMode(ledArray[c],OUTPUT);
-	}
-  Serial.begin(9600);
   setBalance(); //calibration
   setColour(); //reading for each colour
 }
 
-void setBalance() {
-
+void setBalance() 
+{
   Serial.println("Put White Sample For Calibration ...");
   delay(5000); 
 	
-  for(int i = 0;i<=2;i++) {
+  for(int i = 0; i<=2 ;i++) {
     shine_led(i); //turn ON selected LED
     delay(RGBWait);
     whiteArray[i] = getAvgReading(5);
@@ -57,16 +48,23 @@ void setBalance() {
    }
 }
 
-void setColour(){
+void setColour()
+{
   Serial.println("Put PINK Sample For Calibration ...");
   delay(5000); 
-  for(int i = 0;i<=2;i++) {
+  for(int i = 0; i <= 2;i++) {
     shine_led(i); //turn ON selected LED
     delay(RGBWait);
     colourArray[i] = getAvgReading(5); //input values into array
-    pinkArray[i] = (colourArray[i] - blackArray[c])/(greyDiff[i])*255;
+    pinkArray[i] = (colourArray[i] - blackArray[i])/(greyDiff[i])*255;
     shine_led(IR); //turn OFF selected LED
     delay(RGBWait);
+  }
+
+  Serial.println("Pink array:");
+  for (int i = 0; i < 3; i++)
+  {
+    Serial.println(pinkArray[i]);
   }
 
   Serial.println("Put RED Sample For Calibration ...");
@@ -75,20 +73,32 @@ void setColour(){
     shine_led(i); //turn ON selected LED
     delay(RGBWait);
     colourArray[i] = getAvgReading(5); 
-    redArray[i] = (colourArray[i] - blackArray[c])/(greyDiff[i])*255;
-     shine_led(IR); //turn OFF selected LED
+    redArray[i] = (colourArray[i] - blackArray[i])/(greyDiff[i])*255;
+    shine_led(IR); //turn OFF selected LED
     delay(RGBWait);
+  }
+
+  Serial.println("Red array:");
+  for (int i = 0; i < 3; i++)
+  {
+    Serial.println(redArray[i]);
   }
 
   Serial.println("Put ORANGE Sample For Calibration ...");
   delay(5000); 
-    for(int i = 0;i<=2;i++) {
+    for(int i = 0; i<= 2; i++) {
       shine_led(i); //turn ON selected LED
       delay(RGBWait);
       colourArray[i] = getAvgReading(5); 
-      orangeArray[i] = (colourArray[i] - blackArray[c])/(greyDiff[i])*255;
+      orangeArray[i] = (colourArray[i] - blackArray[i])/(greyDiff[i])*255;
       shine_led(IR); //turn OFF selected LED
       delay(RGBWait);
+  }
+
+  Serial.println("Orange array:");
+  for (int i = 0; i < 3; i++)
+  {
+    Serial.println(orangeArray[i]);
   }
 
   Serial.println("Put GREEN Sample For Calibration ...");
@@ -97,38 +107,42 @@ void setColour(){
     shine_led(i); //turn ON selected LED
     delay(RGBWait);
     colourArray[i] = getAvgReading(5); 
-    greenArray[i] = (colourArray[i] - blackArray[c])/(greyDiff[i])*255;
+    greenArray[i] = (colourArray[i] - blackArray[i])/(greyDiff[i])*255;
     shine_led(IR); //turn OFF selected LED
     delay(RGBWait);
-}
+    }
+
+  Serial.println("Green array:");
+  for (int i = 0; i < 3; i++)
+  {
+    Serial.println(greenArray[i]);
+  }
 
   Serial.println("Put BLUE Sample For Calibration ...");
   delay(5000); 
   for(int i = 0;i<=2;i++) {
     shine_led(i); //turn ON selected LED
     delay(RGBWait);
-    blueArray[i] = getAvgReading(5); 
-    redArray[i] = (colourArray[i] - blackArray[c])/(greyDiff[i])*255;
+    colourArray[i] = getAvgReading(5); 
+    blueArray[i] = (colourArray[i] - blackArray[i])/(greyDiff[i])*255;
     shine_led(IR); //turn OFF selected LED
     delay(RGBWait);
+  }
+
+  Serial.println("Blue array:");
+  for (int i = 0; i < 3; i++)
+  {
+    Serial.println(blueArray[i]);
   }
 }
 
 int getAvgReading(int times) {
   int reading;
-  int total =0;
-  for(int i = 0;i < times;i++) {
-    reading = analogRead(LDR);
+  int total = 0;
+  for(int i = 0; i < times; i++) {
+    reading = analogRead(LDR_IN);
     total = reading + total;
     delay(LDRWait);
   }
 	return total/times;
-}
-
-void shine_led(int i)
-{
-  // shines red/green/blue/IR if i is 0/1/2/3
-  // 0 -> 0 0, 1 -> 0 1, etc
-  digitalWrite(DECODE_PIN0, i / 2); 
-  digitalWrite(DECODE_PIN1, i % 2);
 }
