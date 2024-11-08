@@ -42,16 +42,20 @@ for(int c = 0; c < 3; c++) {
 }
 
 int assignCode() {
+  float minimum = euclidianDistance[0];
+  int minPosition = 0;
+  
   for (long i = 0; i < 5; i++) {
   float euclideanDistance[i] = sqrt(sq(referenceColour[i][0]) + sq(referenceColour[i][1]) + sq(referenceColour[i][2]));
   }
-   int minimum = array[0];
-  for (int i = 0; i < size; i++)
-  {
-    if (array[i] < minimum) minimum = array[i];
+  
+  for (int i = 0; i < 5; i++) {
+    if (euclidianDistance[i] < minimum) {
+      minimum = euclidianDistance[i];
+      minPosition = i;
   }
-  return minimum;
-}
+  return minPosition;
+  }
 }
 
 
