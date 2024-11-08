@@ -14,6 +14,8 @@ int colourCode = 0;
 //BLUE == 4 
 // PINK == 5
 
+float euclidianDistance[5];
+
 
 void shine_led(int i)
 {
@@ -40,8 +42,16 @@ for(int c = 0; c < 3; c++) {
 }
 
 int assignCode() {
-  float euclideanDistance = sqrt(referenceColour[i][0]*referenceColour //EDITING HALFWAY LOL
-  
+  for (long i = 0; i < 5; i++) {
+  float euclideanDistance[i] = sqrt(sq(referenceColour[i][0]) + sq(referenceColour[i][1]) + sq(referenceColour[i][2]));
+  }
+   int minimum = array[0];
+  for (int i = 0; i < size; i++)
+  {
+    if (array[i] < minimum) minimum = array[i];
+  }
+  return minimum;
+}
 }
 
 
