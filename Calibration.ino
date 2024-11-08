@@ -6,7 +6,6 @@ float colourArray[] = {0,0,0};
 float whiteArray[] = {0,0,0};
 float blackArray[] = {0,0,0};
 float greyDiff[] = {0,0,0};
-
 float referenceColours[3][5];
 //RED == 1
 //ORANGE == 2
