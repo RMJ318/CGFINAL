@@ -25,24 +25,24 @@ void setBalance()
   delay(5000); 
 	
   for(int i = 0; i<=2 ;i++) {
-    shine_led(i); //turn ON selected LED
-    delay(RGBWait);
-    whiteArray[i] = getAvgReading(5);
-    shine_led(IR); //turn OFF selected LED
-    delay(RGBWait);
+	  shine_led(i); //turn ON selected LED
+	  delay(RGBWait);
+	  whiteArray[i] = getAvgReading(5);
+	  shine_led(IR); //turn OFF selected LED
+	  delay(RGBWait);
  }
 
   Serial.println("Put Black Sample For Calibration ...");
   delay(5000);
 	
   for(int i = 0;i<=2;i++) {
-    shine_led(i); //turn ON selected LED
-    delay(RGBWait);
-    blackArray[i] = getAvgReading(5); 
-    shine_led(IR); //turn OFF selected LED
-    delay(RGBWait);
-    greyDiff[i] = whiteArray[i] - blackArray[i];
-   }
+	  shine_led(i); //turn ON selected LED
+	  delay(RGBWait);
+	  blackArray[i] = getAvgReading(5); 
+	  shine_led(IR); //turn OFF selected LED
+	  delay(RGBWait);
+	  greyDiff[i] = whiteArray[i] - blackArray[i];
+  }
 }
 
 void setColour()
