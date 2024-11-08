@@ -5,16 +5,14 @@
 float colourArray[] = {0,0,0};
 float whiteArray[] = {0,0,0};
 float blackArray[] = {0,0,0};
-float redArray[] = {0,0,0};
-float orangeArray[] = {0,0,0};
-float greenArray[] = {0,0,0};
-float blueArray[] = {0,0,0};
-float pinkArray[] = {0,0,0};
 float greyDiff[] = {0,0,0};
 
-char colourStr[3][5] = {"R = ", "G = ", "B = "};
-
-
+float referenceColours[3][5];
+//RED == 1
+//ORANGE == 2
+//GREEN == 3
+//BLUE == 4 
+// PINK == 5
 
 void calibration_setup()
 {
@@ -50,90 +48,23 @@ void setBalance()
 
 void setColour()
 {
-  Serial.println("Put PINK Sample For Calibration ...");
-  delay(5000); 
-  for(int i = 0; i <= 2;i++) {
-    shine_led(i); //turn ON selected LED
-    delay(RGBWait);
-    colourArray[i] = getAvgReading(5); //input values into array
-    pinkArray[i] = (colourArray[i] - blackArray[i])/(greyDiff[i])*255;
-    shine_led(IR); //turn OFF selected LED
-    delay(RGBWait);
+	for (int i = 0; i < 5; i++) {
+		delay(5000); 
+		for(int j = 0; j < 3 ; j++) {
+			shine_led(j); 
+			delay(RGBWait);
+			colourArray[j] = getAvgReading(5); 
+			referenceColour[i][j] = (colourArray[j] - blackArray[j])/(greyDiff[j])*255;
+			shine_led(IR);
+			delay(RGBWait);
   }
-
-  Serial.println("Pink array:");
-  for (int i = 0; i < 3; i++)
-  {
-    Serial.println(pinkArray[i]);
-  }
-
-  Serial.println("Put RED Sample For Calibration ...");
-  delay(5000); 
-  for(int i = 0;i<=2;i++) {
-    shine_led(i); //turn ON selected LED
-    delay(RGBWait);
-    colourArray[i] = getAvgReading(5); 
-    redArray[i] = (colourArray[i] - blackArray[i])/(greyDiff[i])*255;
-    shine_led(IR); //turn OFF selected LED
-    delay(RGBWait);
-  }
-
-  Serial.println("Red array:");
-  for (int i = 0; i < 3; i++)
-  {
-    Serial.println(redArray[i]);
-  }
-
-  Serial.println("Put ORANGE Sample For Calibration ...");
-  delay(5000); 
-    for(int i = 0; i<= 2; i++) {
-      shine_led(i); //turn ON selected LED
-      delay(RGBWait);
-      colourArray[i] = getAvgReading(5); 
-      orangeArray[i] = (colourArray[i] - blackArray[i])/(greyDiff[i])*255;
-      shine_led(IR); //turn OFF selected LED
-      delay(RGBWait);
-  }
-
-  Serial.println("Orange array:");
-  for (int i = 0; i < 3; i++)
-  {
-    Serial.println(orangeArray[i]);
-  }
-
-  Serial.println("Put GREEN Sample For Calibration ...");
-  delay(5000); 
-  for(int i = 0;i<=2;i++) {
-    shine_led(i); //turn ON selected LED
-    delay(RGBWait);
-    colourArray[i] = getAvgReading(5); 
-    greenArray[i] = (colourArray[i] - blackArray[i])/(greyDiff[i])*255;
-    shine_led(IR); //turn OFF selected LED
-    delay(RGBWait);
-    }
-
-  Serial.println("Green array:");
-  for (int i = 0; i < 3; i++)
-  {
-    Serial.println(greenArray[i]);
-  }
-
-  Serial.println("Put BLUE Sample For Calibration ...");
-  delay(5000); 
-  for(int i = 0;i<=2;i++) {
-    shine_led(i); //turn ON selected LED
-    delay(RGBWait);
-    colourArray[i] = getAvgReading(5); 
-    blueArray[i] = (colourArray[i] - blackArray[i])/(greyDiff[i])*255;
-    shine_led(IR); //turn OFF selected LED
-    delay(RGBWait);
-  }
-
-  Serial.println("Blue array:");
-  for (int i = 0; i < 3; i++)
-  {
-    Serial.println(blueArray[i]);
-  }
+		Serial.print("Colour Code for reference colour");
+		Serial.println(i);
+		
+		for (int i = 0; i < 3; i++) {
+			Serial.println(referenceColour[j][i]);
+		}
+	}
 }
 
 int getAvgReading(int times) {
