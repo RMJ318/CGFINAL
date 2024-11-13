@@ -54,7 +54,7 @@ int assignCode() {
       minimum = euclidianDistance[i];
       minPosition = i;
   }
-  return minPosition;
+  return (minPosition + 1);
   }
 }
 
