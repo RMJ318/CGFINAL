@@ -7,11 +7,11 @@ float whiteArray[] = {0,0,0};
 float blackArray[] = {0,0,0};
 float greyDiff[] = {0,0,0};
 float referenceColours[5][3];
-//RED == 1
-//ORANGE == 2
-//GREEN == 3
-//BLUE == 4 
-// PINK == 5
+//RED == 0
+//ORANGE == 1
+//GREEN == 2
+//BLUE == 3
+// PINK == 4
 
 void calibration_setup()
 {
