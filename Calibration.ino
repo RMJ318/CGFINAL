@@ -60,8 +60,8 @@ void setColour()
 		Serial.print("Colour Code for reference colour");
 		Serial.println(i);
 		
-		for (int i = 0; i < 3; i++) {
-			Serial.println(referenceColour[j][i]);
+		for (int j = 0; j < 3; j++) {
+			Serial.println(referenceColour[i][j]);
 		}
 	}
 }
