@@ -54,7 +54,7 @@ int assignCode() {
       minimum = euclidianDistance[i];
       minPosition = i;
   }
-  return (minPosition + 1);
+  return (minPosition + 1); // colour code starts counting from 1
   }
 }
 
