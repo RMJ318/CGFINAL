@@ -46,7 +46,7 @@ int assignCode() {
   int minPosition = 0;
   
   for (long i = 0; i < 5; i++) {
-  float euclideanDistance[i] = sqrt(sq(referenceColour[i][0]) + sq(referenceColour[i][1]) + sq(referenceColour[i][2]));
+  float euclideanDistance[i] = sqrt(sq(colourArray[0] - referenceColour[i][0]) + sq(colourArray[1] - referenceColour[i][1]) + sq(colourArray[2] - referenceColour[i][2]));
   }
   
   for (int i = 0; i < 5; i++) {
