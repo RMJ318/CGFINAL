@@ -1,7 +1,6 @@
-
-#define motor_speed 192
 // #define FWD_INT 50 //a very short interval for forward();
-#define turn_interval 100//interval for 90 degree turn;
+#define motor_speed 192
+#define turn_interval 400//interval for 90 degree turn;
 //all these in units of milliseconds
 
 // following are for move_forward
@@ -42,18 +41,67 @@ float ultrasound_dist()
   return -1;
 }
 
+int read_ave(int pin, int k)
+{
+  delay(10);
+  int total = 0;
+  for (int i = 0; i < k; i++)
+  {
+    total += analogRead(pin);
+    // Serial.print("total: ");
+    // Serial.println(total);
+    delay(5);
+  } 
+  return total / k;
+}
+
+float offset(void)
+{
+  float total = (float)read_ave(IR_IN, SAMPLES);
+  return 1024 - total;
+}
+
 float ir_dist() // ir distance reading is likely to be unreliable
 {
-  float ambient = analogRead(IR_IN); // ambient light level, subtract from recorded 
-  delayMicroseconds(10);
-  digitalWrite(DECODE_PIN0, HIGH);
-  digitalWrite(DECODE_PIN1, HIGH);
-  float ir_in = analogRead(IR_IN) - ambient;
-  // magic to linearise and convert ir reading to cm
-  return ir_in;
+  shine_led(0);
+  float o1 = offset();
+  Serial.print("offset: ");
+  Serial.println(o1);
+
+
+  float k1 = 2125;
+  float k2 = 0.85;
+  
+  delay(10);
+  shine_led(IR);
+  float raw = 1024 - (float)read_ave(IR_IN, SAMPLES);
+  Serial.print("raw: ");
+  Serial.println(raw);
+  float dist = (k1 * (1/(raw - o1))) - k2;
+  Serial.print("Distance: ");
+  Serial.println(dist);
+  Serial.println("");
+  return dist;
 }
 
 void celebrate() {// Code for playing celebratory tune
+{
+buzzer.tone(659, 200); 
+buzzer.tone(587,200); 
+buzzer.tone(369,400); 
+buzzer.tone(415,400); 
+buzzer.tone(554,200); 
+buzzer.tone(493,200); 
+buzzer.tone(293,400); 
+buzzer.tone(329,400); 
+buzzer.tone(493,200); 
+buzzer.tone(440,200); 
+buzzer.tone(277,400); 
+buzzer.tone(329,400); 
+buzzer.tone(440,800); 
+buzzer.noTone();
+  delay(30000);
+}
   
 }
 void stopMotor() {// Code for stopping motor
@@ -61,30 +109,46 @@ void stopMotor() {// Code for stopping motor
   motor2.stop();
 }
 
+void moveBackabit()
+{
+    stopMotor(); 
+    motor1.run(motor_speed);
+    motor2.run(-motor_speed);
+    delay(250);
+    stopMotor(); 
+}
+
 void moveForward() { // Code for moving forward for some short interval
   //get distance w/ ultrasound
   float ultrasound_d = ultrasound_dist();
-  Serial.print("usound dist: ");
-  Serial.print(ultrasound_d);
+  // Serial.print("usound dist: ");
+  // Serial.println(ultrasound_d);
   float offset_left = 0;
-  int speed_left = 192;
-  int speed_right = 192;
+  int speed_left = motor_speed;
+  int speed_right = motor_speed;
+  
   if (ultrasound_d > 0)
   {
     offset_left = baseline_left - ultrasound_d;
-    Serial.print("offset_left ");
-    Serial.print(offset_left);
+    // Serial.print("offset_left ");
+    // Serial.print(offset_left);
     int correction = round(K_1 * offset_left - K_2 * (offset_left - prev_offset_left));
     prev_offset_left = offset_left;
-    Serial.print("Correction factor: ");
-    Serial.println(correction);
+    // Serial.print("Correction factor: ");
+    // Serial.println(correction);
     speed_left += correction;
     speed_right += -correction;
   }
   else // use ir to get distance
   {
-    motor1.run(-192);
-    motor2.run(192);
+    Serial.println("IR Fallback active");
+    float offset_right = ir_dist();
+    Serial.print("offset_right: ");
+    Serial.print(offset_right);
+    if (offset_right < 4)
+    {
+      speed_left = motor_speed / 2;
+    }
   //   float offset_right = baseline_right - ir_dist();
   }
   motor1.run(-speed_left);
@@ -93,15 +157,15 @@ void moveForward() { // Code for moving forward for some short interval
 }
 
 void turnRight() {// Code for turning right 90 deg
-  motor1.run(motor_speed);
-  motor2.run(motor_speed);
+  motor1.run(-motor_speed);
+  motor2.run(-motor_speed);
   delay(turn_interval);
   stopMotor();
 }
 
 void turnLeft() {// Code for turning left 90 deg
-  motor1.run(-motor_speed);
-  motor2.run(-motor_speed);
+  motor1.run(motor_speed);
+  motor2.run(motor_speed);
   delay(turn_interval);
   stopMotor();
 }
@@ -115,39 +179,27 @@ void uTurn() {// Code for u-turn
 
 void doubleLeftTurn() {// Code for double left turn
   turnLeft();
-  delay(50);
   stopMotor();
-  for (int tick = 0; tick < 40; tick++); // move forward for 40 ticks
-  {
-  moveForward();
-  delay(50);
-  }
+
+  motor1.run(-motor_speed);
+  motor2.run(motor_speed);
+  delay(900);
   stopMotor();
-  delay(50);
+
+  delay(200);
   turnLeft();
   stopMotor();
 }
 void doubleRightTurn() {// Code for double right turn
   turnRight();
-  delay(50);
   stopMotor();
-  for (int tick = 0; tick < 40; tick++); // move forward for 40 ticks
-  {
-  moveForward();
-  delay(50);
-  }
+
+  motor1.run(-motor_speed);
+  motor2.run(motor_speed);
+  delay(900);
   stopMotor();
-  delay(50);
+  
+  delay(200);
   turnRight();
   stopMotor();
 }
-
-// nudge replaced with proportional movement in forward
-
-// combined shineRed/Green/Blue into single function, also in colour sensor
-
-// moved detectColour to colour_sensor.ino
-
-
-
-// movement code shifted to main.ino
