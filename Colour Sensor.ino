@@ -1,13 +1,17 @@
-//THIS FUNCTION WILL DETECT, AND STORE IN THE ARRAY colourArray, 
-THE COLOUR THAT IS UNDER THE MBOT, AFTER IT IS TRIGGERED TO STOP BY THE LINE CHECKER
+//THIS FUNCTION WILL DETECT, AND STORE IN THE ARRAY colourArray, THE COLOUR THAT IS UNDER THE MBOT, AFTER IT IS TRIGGERED TO STOP BY THE LINE CHECKER
 
 // decoder pins and LDR pin declared in main.ino
 
 
 #define RGBWait 200 
 #define LDRWait 10
+#define RANGE 30
+float colourArray[] = {0,0,0};
+float whiteArray[] = {255,255,255};
+float blackArray[] = {520,533,672};
+float greyDiff[] = {172,154,41};
+float referenceColour[5][3] = {{60, 62, 223}, {130, 79, 227}, {194, 139, 59}, {181, 224, 55}, {203, 208, 223}};
 
-int colourCode = 0;
 //RED == 1
 //ORANGE == 2
 //GREEN == 3
@@ -23,7 +27,7 @@ void shine_led(int i)
   digitalWrite(DECODE_PIN1, i % 2);
 }
 
-int detectColour_2() {
+int detectColour() {
 detect();
 return assignCode();
 }
@@ -41,41 +45,34 @@ for(int c = 0; c < 3; c++) { // for each colour LED
  }
 }
 
-int assignCode(){
-  for (int i = 0; i < 3; i++)
+int assignCode() {
+  float euclideanDistance[6] = {1000};
+  float minimum = euclideanDistance[0];
+  int minPosition = 0;
+  
+  // Serial.println(colourArray[0]);
+  // Serial.println(colourArray[1]);
+  // Serial.println(colourArray[2]);
+  for (long i = 1; i < 6; i++) 
   {
-    Serial.println(colourArray[i]);
+
+    euclideanDistance[i] = sqrt(sq(colourArray[0] - referenceColour[i-1][0]) + 
+                                sq(colourArray[1] - referenceColour[i-1][1]) + 
+                                sq(colourArray[2] - referenceColour[i-1][2]));
   }
-  if ((colourArray[0] >= (redArray[0] - 20) && colourArray[0] <= (redArray[0] + 20)) && 
-      (colourArray[1] >= (redArray[1] - 20) && colourArray[1] <= (redArray[1] + 20)) &&
-      (colourArray[2] >= (redArray[2] - 20) && colourArray[2] <= (redArray[2] + 20)))
-      {
-        return 1; // RED
-      }
-  if ((colourArray[0] >= (orangeArray[0] - 20) && colourArray[0] <= (orangeArray[0] + 20)) && 
-      (colourArray[1] >= (orangeArray[1] - 20) && colourArray[1] <= (orangeArray[1] + 20)) &&
-      (colourArray[2] >= (orangeArray[2] - 20) && colourArray[2] <= (orangeArray[2] + 20)))
-      {
-        return 2; // ORANGE
-      } 
-  if ((colourArray[0] >= (greenArray[0] - 20) && colourArray[0] <= (greenArray[0] + 20)) && 
-      (colourArray[1] >= (greenArray[1] - 20) && colourArray[1] <= (greenArray[1] + 20)) &&
-      (colourArray[2] >= (greenArray[2] - 20) && colourArray[2] <= (greenArray[2] + 20)))
-      {
-        return 3; // GREEN
-      } 
-  if ((colourArray[0] >= (blueArray[0] - 20) && colourArray[0] <= (blueArray[0] + 20)) && 
-      (colourArray[1] >= (blueArray[1] - 20) && colourArray[1] <= (blueArray[1] + 20)) &&
-      (colourArray[2] >= (blueArray[2] - 20) && colourArray[2] <= (blueArray[2] + 20)))
-      {
-        return 4; // BLUE
-      } 
-  if ((colourArray[0] >= (pinkArray[0] - 20) && colourArray[0] <= (pinkArray[0] + 20)) && 
-      (colourArray[1] >= (pinkArray[1] - 20) && colourArray[1] <= (pinkArray[1] + 20)) &&
-      (colourArray[2] >= (pinkArray[2] - 20) && colourArray[2] <= (pinkArray[2] + 20)))
-      {
-       return 5; // PINK
-      }
-return 0;
+  euclideanDistance[0] = sqrt(sq(colourArray[0] - 255) + 
+                              sq(colourArray[1] - 255) + 
+                              sq(colourArray[2] - 255));
+
+  for (int i = 0; i < 6; i++) {
+    // Serial.println("Euclidean Distance: ");
+    // Serial.println(euclideanDistance[i]);
+    if (euclideanDistance[i] < minimum) 
+    {
+      minimum = euclideanDistance[i];
+      minPosition = i;
+    }
+  }
+  return minPosition;
 }
 
