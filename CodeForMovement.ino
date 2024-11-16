@@ -31,13 +31,14 @@ float ultrasound_dist()
   
   pinMode(ULTRASONIC, INPUT);
   long duration = pulseIn(ULTRASONIC, HIGH, TIMEOUT); 
-  Serial.print("duration: ");
-  Serial.println(duration);
+  // Serial.print("duration: ");
+  // Serial.println(duration);
   if (duration > 0) 
   {
+    // return distance
     return (duration / 2.0 / 1000000 * SPEED_OF_SOUND * 100); 
   }
-  
+  // return -1 if timeout, error handling handled by caller
   return -1;
 }
 
@@ -64,23 +65,21 @@ float offset(void)
 float ir_dist() // ir distance reading is likely to be unreliable
 {
   shine_led(0);
-  float o1 = offset();
-  Serial.print("offset: ");
-  Serial.println(o1);
+  float o1 = offset(); //obtain ambient conditions
+  // Serial.print("offset: ");
+  // Serial.println(o1);
 
-
-  float k1 = 2125;
+  float k1 = 2125; // constants used in linearising IR output
   float k2 = 0.85;
   
   delay(10);
   shine_led(IR);
-  float raw = 1024 - (float)read_ave(IR_IN, SAMPLES);
-  Serial.print("raw: ");
-  Serial.println(raw);
-  float dist = (k1 * (1/(raw - o1))) - k2;
-  Serial.print("Distance: ");
-  Serial.println(dist);
-  Serial.println("");
+  float raw = 1024 - (float)read_ave(IR_IN, SAMPLES); // obtain with emitter on
+  // Serial.print("raw: ");
+  // Serial.println(raw);
+  float dist = (k1 * (1/(raw - o1))) - k2; // subtract ambient from reading and linearise
+  // Serial.print("Distance: ");
+  // Serial.println(dist);
   return dist;
 }
 
@@ -132,8 +131,9 @@ void moveForward() { // Code for moving forward for some short interval
     offset_left = baseline_left - ultrasound_d;
     // Serial.print("offset_left ");
     // Serial.print(offset_left);
+    // correction = (k1 * (distance from center)) - k2 * (d/dx distance from center))
     int correction = round(K_1 * offset_left - K_2 * (offset_left - prev_offset_left));
-    prev_offset_left = offset_left;
+    prev_offset_left = offset_left; // update prev_offset_left
     // Serial.print("Correction factor: ");
     // Serial.println(correction);
     speed_left += correction;
@@ -141,19 +141,18 @@ void moveForward() { // Code for moving forward for some short interval
   }
   else // use ir to get distance
   {
-    Serial.println("IR Fallback active");
+    // Serial.println("IR Fallback active");
     float offset_right = ir_dist();
-    Serial.print("offset_right: ");
-    Serial.print(offset_right);
+    // Serial.print("offset_right: ");
+    // Serial.print(offset_right);
     if (offset_right < 4)
     {
       speed_left = motor_speed / 2;
     }
-  //   float offset_right = baseline_right - ir_dist();
   }
   motor1.run(-speed_left);
   motor2.run(speed_right);
- // correction = (k1 * (distance from center)) - k2 * (d/dx distance from center))
+
 }
 
 void turnRight() {// Code for turning right 90 deg
