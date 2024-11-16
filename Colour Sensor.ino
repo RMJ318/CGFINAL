@@ -46,7 +46,7 @@ for(int c = 0; c < 3; c++) { // for each colour LED
 }
 
 int assignCode() {
-  float euclideanDistance[6] = {1000};
+  float euclideanDistance[6] = {1000}; // temporary value, all euclidean distance values will be lower than this
   float minimum = euclideanDistance[0];
   int minPosition = 0;
   
@@ -69,6 +69,7 @@ int assignCode() {
     // Serial.println(euclideanDistance[i]);
     if (euclideanDistance[i] < minimum) 
     {
+      // get colour with closest distance
       minimum = euclideanDistance[i];
       minPosition = i;
     }
