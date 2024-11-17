@@ -45,7 +45,7 @@ void doubleLeftTurn();
 void doubleRightTurn();
 
 // colour detection
-// void calibration_setup();
+// void calibration_setup(); // no longer needed as colours have been hardcoded
 int detectColour();
 int assignCode();
 void shine_led(int i);
